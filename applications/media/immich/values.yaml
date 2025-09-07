@@ -1,0 +1,102 @@
+# Immich photo management configuration
+image:
+  server:
+    repository: ghcr.io/immich-app/immich-server
+    tag: "v1.91.4"
+  web:
+    repository: ghcr.io/immich-app/immich-web
+    tag: "v1.91.4"
+  machineLearning:
+    repository: ghcr.io/immich-app/immich-machine-learning
+    tag: "v1.91.4"
+
+replicaCount: 1
+
+# PostgreSQL database
+postgresql:
+  enabled: true
+  auth:
+    username: immich
+    password: immich123
+    database: immich
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+# Redis for job queues
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 3001
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: immich.homelab.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Persistence for photos and uploads
+persistence:
+  uploads:
+    enabled: true
+    size: 100Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  library:
+    enabled: true
+    size: 100Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+
+# Environment variables
+env:
+  - name: DB_HOSTNAME
+    value: immich-postgresql
+  - name: DB_USERNAME
+    value: immich
+  - name: DB_PASSWORD
+    value: immich123
+  - name: DB_DATABASE_NAME
+    value: immich
+  - name: REDIS_HOSTNAME
+    value: immich-redis-master
+  - name: MACHINE_LEARNING_ENABLED
+    value: "true"
+
+# Resource limits
+resources:
+  server:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+  web:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  machineLearning:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 2000m
+      memory: 8Gi

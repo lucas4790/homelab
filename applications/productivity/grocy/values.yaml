@@ -1,0 +1,54 @@
+# Grocy inventory management configuration
+image:
+  repository: linuxserver/grocy
+  tag: "4.0.3"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: grocy.homelab.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Persistence for Grocy data
+persistence:
+  enabled: true
+  size: 5Gi
+  storageClass: ""
+  accessMode: ReadWriteOnce
+
+# Environment variables
+env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+  - name: TZ
+    value: "UTC"
+
+# Resource limits
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# Security context
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000

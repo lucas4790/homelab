@@ -1,0 +1,119 @@
+kube-prometheus-stack:
+  # Grafana configuration
+  grafana:
+    enabled: true
+    adminPassword: admin123
+    
+    # Ingress for Grafana
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - grafana.homelab.local
+      tls: []
+    
+    # Persistence for Grafana
+    persistence:
+      enabled: true
+      size: 5Gi
+      storageClassName: ""
+    
+    # Grafana configuration
+    grafana.ini:
+      server:
+        root_url: "http://grafana.homelab.local"
+      security:
+        admin_user: admin
+        admin_password: admin123
+    
+    # Default dashboards
+    defaultDashboardsEnabled: true
+    
+    # Resource limits
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+
+  # Prometheus configuration
+  prometheus:
+    prometheusSpec:
+      # Retention period
+      retention: 30d
+      
+      # Storage configuration
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: ""
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
+      
+      # Resource limits
+      resources:
+        requests:
+          cpu: 500m
+          memory: 2Gi
+        limits:
+          cpu: 2000m
+          memory: 8Gi
+      
+      # Service monitor selector
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
+    
+    # Ingress for Prometheus
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - prometheus.homelab.local
+      tls: []
+
+  # AlertManager configuration
+  alertmanager:
+    alertmanagerSpec:
+      # Storage configuration
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: ""
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 5Gi
+      
+      # Resource limits
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 1Gi
+    
+    # Ingress for AlertManager
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - alertmanager.homelab.local
+      tls: []
+
+  # Node Exporter
+  nodeExporter:
+    enabled: true
+
+  # Kube State Metrics
+  kubeStateMetrics:
+    enabled: true
+
+  # Prometheus Operator
+  prometheusOperator:
+    enabled: true

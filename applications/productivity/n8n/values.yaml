@@ -1,0 +1,80 @@
+# n8n workflow automation configuration
+image:
+  repository: n8nio/n8n
+  tag: "1.19.4"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# PostgreSQL database
+postgresql:
+  enabled: true
+  auth:
+    username: n8n
+    password: n8n123
+    database: n8n
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 5678
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: n8n.homelab.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Persistence for n8n data
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: ""
+  accessMode: ReadWriteOnce
+
+# Environment variables
+env:
+  - name: DB_TYPE
+    value: "postgresdb"
+  - name: DB_POSTGRESDB_HOST
+    value: "n8n-postgresql"
+  - name: DB_POSTGRESDB_USER
+    value: "n8n"
+  - name: DB_POSTGRESDB_PASSWORD
+    value: "n8n123"
+  - name: DB_POSTGRESDB_DATABASE
+    value: "n8n"
+  - name: N8N_BASIC_AUTH_ACTIVE
+    value: "true"
+  - name: N8N_BASIC_AUTH_USER
+    value: "admin"
+  - name: N8N_BASIC_AUTH_PASSWORD
+    value: "admin123"
+  - name: WEBHOOK_URL
+    value: "http://n8n.homelab.local"
+  - name: GENERIC_TIMEZONE
+    value: "UTC"
+
+# Resource limits
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+# Security context
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000

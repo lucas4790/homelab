@@ -1,0 +1,6 @@
+apiVersion: v2
+name: authentic
+description: Authentic SSO provider for homelab
+type: application
+version: 0.1.0
+appVersion: "2024.1.2"

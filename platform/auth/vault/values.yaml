@@ -1,0 +1,78 @@
+vault:
+  # Vault server configuration
+  server:
+    # Development mode (NOT for production!)
+    dev:
+      enabled: true
+      devRootToken: "root-token-change-me"
+    
+    # Storage configuration (file backend for development)
+    dataStorage:
+      enabled: true
+      size: 10Gi
+      storageClass: ""
+    
+    # Resource limits
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 1Gi
+        cpu: 500m
+    
+    # Service configuration
+    service:
+      enabled: true
+      type: ClusterIP
+      port: 8200
+    
+    # Ingress configuration
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - host: vault.homelab.local
+          paths:
+            - /
+      tls: []
+    
+    # High availability (disabled for development)
+    ha:
+      enabled: false
+    
+    # Standalone mode
+    standalone:
+      enabled: true
+      config: |
+        ui = true
+        
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        
+        storage "file" {
+          path = "/vault/data"
+        }
+        
+        # Enable API access
+        api_addr = "http://0.0.0.0:8200"
+        cluster_addr = "http://0.0.0.0:8201"
+  
+  # UI configuration
+  ui:
+    enabled: true
+    serviceType: ClusterIP
+  
+  # Injector (for secret injection into pods)
+  injector:
+    enabled: true
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 512Mi
+        cpu: 500m
