@@ -27,10 +27,7 @@ minio:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - host: minio.homelab.local
-        paths:
-          - path: /
-            pathType: Prefix
+      - minio.homelab.local
     tls: []
   
   # Ingress for MinIO Console
@@ -38,10 +35,7 @@ minio:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - host: minio-console.homelab.local
-        paths:
-          - path: /
-            pathType: Prefix
+      - minio-console.homelab.local
     tls: []
   
   # Resources
