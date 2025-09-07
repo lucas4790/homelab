@@ -1,0 +1,11 @@
+apiVersion: v2
+name: nextcloud
+description: Nextcloud file storage and collaboration platform
+type: application
+version: 0.1.0
+appVersion: "27.1.4"
+
+dependencies:
+  - name: nextcloud
+    version: "4.5.4"
+    repository: https://nextcloud.github.io/helm/

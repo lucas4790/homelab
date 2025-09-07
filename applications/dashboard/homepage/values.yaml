@@ -1,0 +1,126 @@
+# Custom values for homepage
+image:
+  repository: ghcr.io/gethomepage/homepage
+  tag: v0.8.4
+  
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: homepage.homelab.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# Configuration files
+config:
+  settings.yaml: |
+    title: Homelab Dashboard
+    theme: dark
+    color: slate
+    headerStyle: boxed
+    layout:
+      Infrastructure:
+        style: row
+        columns: 3
+      Storage:
+        style: row
+        columns: 2
+      Media:
+        style: row
+        columns: 3
+      Productivity:
+        style: row
+        columns: 2
+      Monitoring:
+        style: row
+        columns: 3
+        
+  services.yaml: |
+    - Infrastructure:
+        - ArgoCD:
+            href: http://argocd.homelab.local
+            description: GitOps deployment
+            icon: argocd
+        - Cert Manager:
+            href: https://cert-manager.io
+            description: Certificate management
+            icon: cert-manager
+            
+    - Storage:
+        - MinIO:
+            href: http://minio-console.homelab.local
+            description: Object storage
+            icon: minio
+        - Nextcloud:
+            href: http://nextcloud.homelab.local
+            description: File sync & share
+            icon: nextcloud
+            
+    - Media:
+        - Jellyfin:
+            href: http://jellyfin.homelab.local
+            description: Media server
+            icon: jellyfin
+        - Immich:
+            href: http://immich.homelab.local
+            description: Photo management
+            icon: immich
+            
+    - Productivity:
+        - Paperless:
+            href: http://paperless.homelab.local
+            description: Document management
+            icon: paperless
+        - Obsidian:
+            href: http://obsidian.homelab.local
+            description: Knowledge base
+            icon: obsidian
+            
+    - Monitoring:
+        - Grafana:
+            href: http://grafana.homelab.local
+            description: Dashboards
+            icon: grafana
+        - Prometheus:
+            href: http://prometheus.homelab.local
+            description: Metrics
+            icon: prometheus
+        - Uptime Kuma:
+            href: http://uptime.homelab.local
+            description: Uptime monitoring
+            icon: uptime-kuma
+            
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+        nodes:
+          show: false
+          
+    - resources:
+        cpu: true
+        memory: true
+        disk: /
+        
+    - search:
+        provider: duckduckgo
+        target: _blank

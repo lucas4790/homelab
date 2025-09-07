@@ -1,0 +1,21 @@
+cert-manager:
+  installCRDs: true
+  
+  global:
+    leaderElection:
+      namespace: cert-manager
+  
+  # Enable prometheus metrics
+  prometheus:
+    enabled: true
+    servicemonitor:
+      enabled: false  # Enable later with monitoring stack
+  
+  # Webhook configuration
+  webhook:
+    timeoutSeconds: 30
+  
+  # Controller configuration
+  controller:
+    # Enable feature gates for development
+    featureGates: "ExperimentalCertificateSigningRequestControllers=true"

@@ -1,0 +1,45 @@
+argo-cd:
+  global:
+    domain: argocd.homelab.local
+  
+  configs:
+    cm:
+      url: "https://argocd.homelab.local"
+      application.instanceLabelKey: argocd.argoproj.io/instance
+      server.insecure: true  # For development, we'll use HTTP initially
+    
+    params:
+      server.insecure: true
+  
+  server:
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: true
+      ingressClassName: "nginx"
+      hosts:
+        - argocd.homelab.local
+      paths:
+        - /
+      pathType: Prefix
+      tls: []  # We'll add TLS later with cert-manager
+  
+  # Enable notifications (optional)
+  notifications:
+    enabled: false
+  
+  # ApplicationSet controller
+  applicationSet:
+    enabled: true
+  
+  # Redis for caching
+  redis:
+    enabled: true
+  
+  # Repo server
+  repoServer:
+    replicas: 1
+  
+  # Controller
+  controller:
+    replicas: 1
